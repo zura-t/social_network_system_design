@@ -1,0 +1,472 @@
+openapi: 3.0.0
+
+tags:
+  - name: Auth
+  - name: Users
+  - name: Posts
+  - name: Comments
+  - name: Ratings
+
+info:
+  title: Social Network API
+  description: Current API describes methods of Social Network service
+  version: 1.0.0
+
+paths:
+  /auth/register:
+    post:
+      summary: Register
+      description: Method register new user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: email
+                password:
+                  type: string
+                  description: password
+                firstname:
+                  type: string
+                  description: firstname
+                lastname:
+                  type: string
+                  description: lastname
+              required:
+                - email
+                - password
+                - firstname
+                - lastname
+            examples:
+              request:
+                value:
+                  email: "example@gmail.com"
+                  password: 123
+                  firstname: 'User'
+                  lastname: 'N'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: access_token
+                  userId:
+                    type: string
+                    description: userId
+                required:
+                  - userId
+                  - access_token
+        400:
+          description: Bad Request
+        500:
+          description: Server error
+
+  /auth/login:
+    post:
+      summary: Login
+      description: Method register new user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: email
+                password:
+                  type: string
+                  description: password
+                firstname:
+                  type: string
+                  description: firstname
+                lastname:
+                  type: string
+                  description: lastname
+              required:
+                - email
+                - password
+                - firstname
+                - lastname
+            examples:
+              request:
+                value:
+                  email: "example@gmail.com"
+                  password: 123
+                  firstname: 'User'
+                  lastname: 'N'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: access_token
+                  userId:
+                    type: string
+                    description: userId
+                required:
+                  - userId
+                  - access_token
+        400:
+          description: Bad Request
+        500:
+          description: Server error
+          
+  /users/{id}:
+    get:
+      summary: Get user
+      description: Method gets user info
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User id
+          schema:
+            type : string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: userId
+                  firstname:
+                    type: string
+                    description: firstname
+                  lastname:
+                    type: string
+                    description: lastname
+                required:
+                  - id
+                  - firstname
+                  - lastname
+        400:
+          description: Bad Request
+        404:
+          description: Not found
+        500:
+          description: Server error
+          
+  /users:
+    patch:
+      summary: Update profile
+      description: Method updates user profile
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                  description: firstname
+                lastname:
+                  type: string
+                  description: lastname
+            examples:
+              request:
+                value:
+                  id: "123"
+                  firstname: 'User2'
+                  lastname: 'New'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: access_token
+                  userId:
+                    type: string
+                    description: userId
+                required:
+                  - userId
+                  - access_token
+        400:
+          description: Bad Request
+        500:
+          description: Server error
+          
+    delete:
+      summary: Remove profile
+      description: Method removes profile
+      tags:
+        - Users
+      responses:
+        200:
+          description: Ok
+        404:
+          description: Not found
+        500:
+          description: Server error
+
+  /users/follow:
+    post:
+      summary: Follow user
+      description: Add user to followings
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  description: userId
+              required:
+                - userId
+            examples:
+              request:
+                value:
+                  userId: "123"
+      responses:
+        302:
+          description: Redirect
+        404:
+          description: Not found
+        500:
+          description: Server error
+          
+  /users/follow/{id}:
+    delete:
+      summary: Delete user from followings
+      description: Delete user from followings
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User id
+          schema:
+            type : string
+      responses:
+        302:
+          description: Redirect
+        404:
+          description: Not found
+        500:
+          description: Server error
+          
+  /posts:
+    get:
+      summary: Get all posts
+      tags:
+        - Posts
+      responses:
+        200:
+          description: A list of posts
+        500:
+          description: Server error
+          
+    post:
+      summary: Create a new post
+      tags:
+        - Posts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        201:
+          description: Post created
+
+  /posts/{postId}:
+    get:
+      summary: Get a post by ID
+      tags:
+        - Posts
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The requested post
+          
+    patch:
+      summary: Update a post
+      tags:
+        - Posts
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        200:
+          description: Post updated
+          
+    delete:
+      summary: Delete a post
+      tags:
+        - Posts
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Post deleted
+
+  /comments:
+    get:
+      summary: Get all comments for a post
+      tags:
+        - Comments
+      parameters:
+        - name: postId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: A list of comments
+          
+    post:
+      summary: Add a comment to a post
+      tags:
+        - Comments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        201:
+          description: Comment added
+          
+    patch:
+      summary: Update a comment
+      tags:
+        - Comments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        200:
+          description: Comment updated
+          
+  /comments/{commentId}:
+    delete:
+      summary: Delete a comment
+      tags:
+        - Comments
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Comment deleted
+
+  /ratings:
+    post:
+      summary: Rate a post
+      tags:
+        - Ratings
+      parameters:
+        - name: postId
+          in: query
+          description: PostId
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Rating submitted
+          
+    delete:
+      summary: Delete a rating
+      tags:
+        - Ratings
+      parameters:
+        - name: postId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Rating deleted
+
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        imgs:
+          type: array
+          items:
+            type: string
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+        postId:
+          type: string
+        text:
+          type: string
