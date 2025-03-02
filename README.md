@@ -14,7 +14,7 @@
 - Audience CIS countries
 - Always store data
 - availability 99,95%
-- Usage spikes expected during peak travel/holiday seasons (e.g., summer vacations, winter holidays)
+- Usage spikes expected during summer vacations (increases 1,5 times), and winter holidays (increases 5 times)
 - app should work on different devices
 - Limits
   - max number of followings 10000
@@ -33,12 +33,16 @@
     - create 5 ratings per day
     - view 5 ratings per day
   - Discovery
-    find popular places 3 times per week
+    - find popular places 3 times per week
+  - Followings
+    - follow 2 new users per day
 - Timings
   - create post 2 seconds
-  - rate, create comment, follow someone 1 second
+  - rate a post 1 second
+  - create comment 1 second
   - find places 2 seconds
   - view feed 2 seconds
+  - follow user 1 second
 
 ## Basic calculations
 
@@ -61,6 +65,10 @@ RPS(read) = 10kk * 5 ratings per day / 86400 ~= 600
 ### Places
 
 RPS(read) = 10kk * 3 time per week view popular places / 7 / 86400 ~= 60
+
+### Followings
+
+RPS(write) = 10kk * 2 users per day / 86400 ~= 231
 
 
 ## AVG size of data
@@ -90,10 +98,9 @@ RPS(read) = 10kk * 3 time per week view popular places / 7 / 86400 ~= 60
 - id (8 bytes)
 - post_id (8 bytes)
 - author_id (8 bytes)
-- value INT8 (1 byte)
 - created_at (8 bytes)
 
-**Total** 8B + 8B + 8B + 1B + 8B = 33B
+**Total** 8B + 8B + 8B + 8B = 32B
 
 --- 
 
@@ -115,5 +122,5 @@ Metainformation = id + author_id + text + geo + created_at = 8 + 8 + 500 + 100 +
 
 ### Ratings
 
-- Traffic (write) = 600 * 33B = 20KB/s
-- Traffic (read) = 600 * 33B = 20KB/s
+- Traffic (write) = 600 * 32B = 20KB/s
+- Traffic (read) = 600 * 32B = 20KB/s

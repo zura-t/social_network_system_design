@@ -24,49 +24,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  description: email
-                password:
-                  type: string
-                  description: password
-                firstname:
-                  type: string
-                  description: firstname
-                lastname:
-                  type: string
-                  description: lastname
-              required:
-                - email
-                - password
-                - firstname
-                - lastname
-            examples:
-              request:
-                value:
-                  email: "example@gmail.com"
-                  password: 123
-                  firstname: 'User'
-                  lastname: 'N'
+              $ref: '#/components/schemas/UserRegister'
       responses:
         200:
           description: Ok
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  access_token:
-                    type: string
-                    description: access_token
-                  userId:
-                    type: string
-                    description: userId
-                required:
-                  - userId
-                  - access_token
+                $ref: '#/components/schemas/UserTokenResponse'
         400:
           description: Bad Request
         500:
@@ -83,49 +48,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  description: email
-                password:
-                  type: string
-                  description: password
-                firstname:
-                  type: string
-                  description: firstname
-                lastname:
-                  type: string
-                  description: lastname
-              required:
-                - email
-                - password
-                - firstname
-                - lastname
-            examples:
-              request:
-                value:
-                  email: "example@gmail.com"
-                  password: 123
-                  firstname: 'User'
-                  lastname: 'N'
+              $ref: '#/components/schemas/UserLogin'
       responses:
         200:
           description: Ok
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  access_token:
-                    type: string
-                    description: access_token
-                  userId:
-                    type: string
-                    description: userId
-                required:
-                  - userId
-                  - access_token
+                $ref: '#/components/schemas/UserTokenResponse'
         400:
           description: Bad Request
         500:
@@ -150,21 +80,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: userId
-                  firstname:
-                    type: string
-                    description: firstname
-                  lastname:
-                    type: string
-                    description: lastname
-                required:
-                  - id
-                  - firstname
-                  - lastname
+                $ref: '#/components/schemas/User'
         400:
           description: Bad Request
         404:
@@ -183,37 +99,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                firstname:
-                  type: string
-                  description: firstname
-                lastname:
-                  type: string
-                  description: lastname
-            examples:
-              request:
-                value:
-                  id: "123"
-                  firstname: 'User2'
-                  lastname: 'New'
+              $ref: '#/components/schemas/UserUpdate'
       responses:
         200:
           description: Ok
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  access_token:
-                    type: string
-                    description: access_token
-                  userId:
-                    type: string
-                    description: userId
-                required:
-                  - userId
-                  - access_token
+                $ref: '#/components/schemas/User'
         400:
           description: Bad Request
         500:
@@ -232,37 +125,27 @@ paths:
         500:
           description: Server error
 
-  /users/follow:
+  /users/followings/{id}:
     post:
       summary: Follow user
       description: Add user to followings
       tags:
         - Users
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                userId:
-                  type: string
-                  description: userId
-              required:
-                - userId
-            examples:
-              request:
-                value:
-                  userId: "123"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id of user to follow
+          schema:
+            type: string
       responses:
-        302:
-          description: Redirect
+        200:
+          description: Ok
         404:
           description: Not found
         500:
           description: Server error
-          
-  /users/follow/{id}:
+
     delete:
       summary: Delete user from followings
       description: Delete user from followings
@@ -272,7 +155,7 @@ paths:
         - name: id
           in: path
           required: true
-          description: User id
+          description: id of user to stop follow
           schema:
             type : string
       responses:
@@ -288,9 +171,26 @@ paths:
       summary: Get all posts
       tags:
         - Posts
+      parameters:
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: offset
+          in: query
+          required: true
+          schema:
+            type: number
       responses:
         200:
           description: A list of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
         500:
           description: Server error
           
@@ -303,52 +203,39 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Post'
+              $ref: '#/components/schemas/PostCreate'
       responses:
         201:
           description: Post created
-
-  /posts/{postId}:
-    get:
-      summary: Get a post by ID
-      tags:
-        - Posts
-      parameters:
-        - name: postId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: The requested post
           
+  /posts/{post_id}:
     patch:
       summary: Update a post
       tags:
         - Posts
       parameters:
-        - name: postId
+        - name: post_id
           in: path
           required: true
+          description: Post id
           schema:
-            type: string
+            type : string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Post'
+              $ref: '#/components/schemas/PostUpdate'
       responses:
         200:
           description: Post updated
-          
+
     delete:
       summary: Delete a post
       tags:
         - Posts
       parameters:
-        - name: postId
+        - name: post_id
           in: path
           required: true
           schema:
@@ -356,6 +243,23 @@ paths:
       responses:
         204:
           description: Post deleted
+          
+  /posts/media:
+    post:
+      tags:
+        - Posts
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadMedia'
+      responses:
+        200:
+          description: Upload media
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostMedia'
 
   /comments:
     get:
@@ -363,14 +267,30 @@ paths:
       tags:
         - Comments
       parameters:
-        - name: postId
+        - name: post_id
           in: query
           required: true
           schema:
             type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: offset
+          in: query
+          required: true
+          schema:
+            type: number
       responses:
         200:
           description: A list of comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
           
     post:
       summary: Add a comment to a post
@@ -381,32 +301,39 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Comment'
+              $ref: '#/components/schemas/CommentCreate'
       responses:
         201:
           description: Comment added
           
+  /comments/{comment_id}:
     patch:
       summary: Update a comment
       tags:
         - Comments
+      parameters:
+        - name: comment_id
+          in: path
+          required: true
+          description: Comment id
+          schema:
+            type : string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Comment'
+              $ref: '#/components/schemas/CommentUpdate'
       responses:
         200:
           description: Comment updated
-          
-  /comments/{commentId}:
+
     delete:
       summary: Delete a comment
       tags:
         - Comments
       parameters:
-        - name: commentId
+        - name: comment_id
           in: path
           required: true
           schema:
@@ -416,14 +343,38 @@ paths:
           description: Comment deleted
 
   /ratings:
+    get:
+      summary: Get all ratings for a post
+      tags:
+        - Ratings
+      parameters:
+        - name: post_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: offset
+          in: query
+          required: true
+          schema:
+            type: number
+      responses:
+        200:
+          description: A list of users who added rating to post
+          
     post:
       summary: Rate a post
       tags:
         - Ratings
       parameters:
-        - name: postId
+        - name: post_id
           in: query
-          description: PostId
+          description: Post id
           required: true
           schema:
             type: string
@@ -436,7 +387,7 @@ paths:
       tags:
         - Ratings
       parameters:
-        - name: postId
+        - name: post_id
           in: query
           required: true
           schema:
@@ -447,26 +398,176 @@ paths:
 
 components:
   schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - email
+        - firstname
+        - lastname
+        - created_at
+    UserRegister:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+      required:
+        - email
+        - password
+        - firstname
+        - lastname
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+    UserUpdate:
+      type: object
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+    UserTokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: access_token
+        user_id:
+          type: string
+          description: user_id
+      required:
+        - user_id
+        - access_token
+
     Post:
       type: object
       properties:
         id:
           type: string
-        title:
+        text:
           type: string
-        content:
+        author_id:
           type: string
-        imgs:
+        geo:
+          type: string
+        img:
           type: array
           items:
             type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - text
+        - author_id
+        - geo
+        - img
+        - created_at
+    PostCreate:
+      type: object
+      properties:
+        text:
+          type: string
+        geo:
+          type: string
+        img:
+          type: array
+          items:
+            type: string
+      required:
+        - text
+        - geo
+        - img
+    PostUpdate:
+      type: object
+      properties:
+        text:
+          type: string
+        geo:
+          type: string
+        imgToAdd:
+          type: array
+          items:
+            type: string
+        imgToDelete:
+          type: array
+          items:
+            type: string
+    
+    PostMedia:
+      type: object
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+    UploadMedia:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
 
     Comment:
       type: object
       properties:
         id:
           type: string
-        postId:
+        author_id:
+          type: string
+        post_id:
           type: string
         text:
           type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - author_id
+        - post_id
+        - text
+        - created_at
+    CommentCreate:
+      type: object
+      properties:
+        post_id:
+          type: string
+        text:
+          type: string
+      required:
+        - post_id
+        - text
+    CommentUpdate:
+      type: object
+      properties:
+        text:
+          type: string
+      required:
+        - text
