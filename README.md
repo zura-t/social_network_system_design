@@ -88,9 +88,10 @@ RPS(write) = 10kk * 2 users per day / 86400 ~= 231
 - post_id (8 bytes)
 - author_id (8 bytes)
 - text (up to 250 bytes)
+- reply_comment_id (8 bytes)
 - created_at (8 bytes)
 
-**Total**: 8B + 8B + 8B + 250B + 8B = 300B
+**Total**: 8B + 8B + 8B + 250B + 8B + 8B = 300B
 
 ---
 
@@ -145,6 +146,8 @@ Metainformation = id + author_id + text + geo + created_at = 8 + 8 + 500 + 100 +
 
 Service operation time = 1 year
 
+Total disks = 24 SSD
+
 ### Posts
 
 Capacity = 10kB/s * 86400 * 365 = 315,5Gb
@@ -163,6 +166,7 @@ throughput = 10KB/s / 500mb/s ~= 1 disk
 capacity = 315,5GB / 1TB ~= 1 disk
 Total disks = 1 disk
 
+Decision = 1 SSD
 
 #### Media
 
@@ -182,6 +186,8 @@ throughput = 51MB/s / 500MB/s ~= 1 disk
 capacity = 1,8PB / 100TB = 18 disks
 Total disks = 18 disks
 
+Decision = 18 SSD
+
 ### Comments
 
 total rps = 50 + 1200 = 1250
@@ -198,6 +204,8 @@ iops = 1250 / 1000 iops ~= 2 disks
 throughput = 15KB/s / 500mb/s ~= 1 disk
 capacity = 1,62TB / 1TB ~= 2 disks
 Total disks = 2 disks
+
+Decision = 2 SSD
 
 ### Rating
 
@@ -216,6 +224,8 @@ throughput = 20Kb/s / 500mb/s ~= 1 disk
 capacity = 2tb / 1tb = 2 disks
 Total disks = 2 disks
 
+Decision = 2 SSD
+
 ### Followings
 
 total rps = 231
@@ -232,3 +242,5 @@ iops = 231 / 1000 iops ~= 1 disk
 throughput = 8kb/s / 500mb/s ~= 1 disk
 capacity = 160GB / 1tb ~= 1 disk
 Total disks = 1 disk
+
+Decision = 3 HDD

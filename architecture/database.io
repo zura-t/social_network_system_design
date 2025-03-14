@@ -1,5 +1,4 @@
-// Use DBML to define your database structure
-// Docs: https://dbml.dbdiagram.io/docs
+// Media will be stored in S3 database (posts_media folder)
 
 Table follows {
   following_user_id string [not null]
@@ -30,6 +29,7 @@ Table comments {
   author_id string [not null]
   text string [not null]
   post_id string [not null]
+  reply_comment_id string [not null]
   created_at timestamp [not null, default: `now()`]
 }
 
@@ -48,6 +48,8 @@ Ref: users.id < follows.followed_user_id
 Ref: comments.author_id > users.id
 
 Ref: comments.post_id > posts.id
+
+Ref: comments.reply_comment_id > comments.id
 
 Ref: users.id < rating.user_id
 
