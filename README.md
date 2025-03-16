@@ -142,14 +142,14 @@ Metainformation = id + author_id + text + geo + created_at = 8 + 8 + 500 + 100 +
 
 ---
 
-## Capacity
+## Capacity, number of hosts
 
 Service operation time = 1 year
 
 Total disks = 24 SSD
 
 ### Posts
-
+~~~
 Capacity = 10kB/s * 86400 * 365 = 315,5Gb
 
 RPS = 367
@@ -168,8 +168,16 @@ Total disks = 1 disk
 
 Decision = 1 SSD
 
-#### Media
+Replication:
+3 RF, master-slave, async
+Sharding:
+Will not be used
 
+Hosts = 1 host
+Hosts_with_replication = 3 hosts
+~~~
+#### Media
+~~~
 We'll store media in S3
 capacity = 51MB/s * 86400 * 365 ~= 1,8PB
 total rps = 17 + 350 = 367
@@ -188,8 +196,16 @@ Total disks = 18 disks
 
 Decision = 18 SSD
 
-### Comments
+Replication:
+3 RF, master-slave, async
+Sharding:
+uniformly
 
+Hosts = 18 / 2 = 9 hosts
+Hosts_with_replication = 9 * 3 = 27 hosts
+~~~
+### Comments
+~~~
 total rps = 50 + 1200 = 1250
 capacity = 15KB/s * 86400 * 1250 ~= 1,62TB
 
@@ -207,8 +223,16 @@ Total disks = 2 disks
 
 Decision = 2 SSD
 
-### Rating
+Replication:
+3 RF, master-slave, async
+Sharding:
+Will not be used
 
+Hosts = 1 host
+Hosts_with_replication = 1 * 3 = 3
+~~~
+### Rating
+~~~
 total rps = 600 + 600 = 1200
 capacity = 20Kb/s * 86400 * 1200 ~= 2Tb
 
@@ -226,8 +250,16 @@ Total disks = 2 disks
 
 Decision = 2 SSD
 
-### Followings
+Replication:
+2 RF, master-slave, async
+Sharding:
+Will not be used
 
+Hosts = 1 host
+Hosts_with_replication = 1 * 2 = 2
+~~~
+### Followings
+~~~
 total rps = 231
 capacity = 8kb/s * 86400 * 231 = 160gb
 
@@ -244,3 +276,12 @@ capacity = 160GB / 1tb ~= 1 disk
 Total disks = 1 disk
 
 Decision = 3 HDD
+
+Replication:
+2 RF, master-slave, async
+Sharding:
+Will not be used
+
+Hosts = 1 host
+Hosts_with_replication = 1 * 2 = 2
+~~~
