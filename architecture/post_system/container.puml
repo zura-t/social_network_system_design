@@ -1,0 +1,24 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User")
+
+Container(reverseProxy, "Reverse proxy", "Nginx")
+
+System_Boundary(postSystem, "Post system") {
+Container(postService, "Post Service", "Go", "Manages posts, and discovery", $tags="webApp")
+ContainerDb(postDatabase, "Post database", "Postgresql", "Stores posts, and locations",  $tags="db")
+}
+
+System_Boundary(userSystem, "User system") {
+}
+
+System_Boundary(reactionSystem, "Reaction system") {
+}
+
+Rel(user, reverseProxy, "CRUD operations for posts", "REST")
+Rel(reverseProxy, postService, "CRUD operations for posts", "REST")
+Rel(postService, postDatabase, "Get/Update posts, and locations")
+Rel(postService, userSystem, "Get users info (username, avatar) when getting posts")
+Rel(postService, reactionSystem, "Get number of comments, and likes when getting posts")
+@enduml
